@@ -447,6 +447,8 @@ OS_EXT OS_STK OSTaskStatStk[OS_TASK_STAT_STK_SIZE]; /* Statistics task stack    
 #endif
 
 OS_EXT unsigned int OSIntLock;   /*临界区进出标记*/
+OS_EXT unsigned int OSCRITICALSTACK[32];
+OS_EXT unsigned int OSCRITICALSTACKTOP;
 
 OS_EXT unsigned int OSIntNesting; /* Interrupt nesting level                         */
 OS_EXT INT8U OSIntExitY;
@@ -646,6 +648,31 @@ INT8U OSQQuery(OS_EVENT *pevent, OS_Q_DATA *pdata);
 
 #endif
 
+typedef struct OSSignalEvent
+{
+    int prio;
+    int signalNum;
+    int mask;
+    void (*func)(void *);
+    void *pNextNum;
+    void *pNext;
+} OSSignalEvent;
+
+OS_EXT OSSignalEvent *OSSignalFuncRegisterTabel[OS_LOWEST_PRIO + 1];
+OS_EXT int OSSignalTaskMask[OS_LOWEST_PRIO + 1];
+
+void OSSignalInit();
+void OSSignalDeinit();
+int OSSignalConnect(int signalNum, int targetTaskPrio, void (*eventFunc)(void *));
+int OSSignalUnregister(int signalNum, int prio);
+int OSSignalDisConnect(int signalNum, int originPrio);
+int OSSignalSend(int signalNum, void *pdata);
+void OSSignalDeleteResquestFromOrigin();
+void OSSignalDeleteResquestFromTarget();
+int OSSignalSetMaskFromOrigin(int signalNum, int prio, int mask);
+int OSSignalSetALLMaskFromTarget(int mask);
+int OSSignalSetMaskFromTarget(int signalNum, int originPrio, int mask);
+
 /*$PAGE*/
 /*
 *********************************************************************************************************
@@ -655,7 +682,7 @@ INT8U OSQQuery(OS_EVENT *pevent, OS_Q_DATA *pdata);
 #if OS_SEM_EN > 0
 
 #if OS_SEM_ACCEPT_EN > 0
-unsigned int OSSemAccept(OS_EVENT *pevent);
+    unsigned int OSSemAccept(OS_EVENT *pevent);
 #endif
 
 OS_EVENT *OSSemCreate(unsigned int cnt);

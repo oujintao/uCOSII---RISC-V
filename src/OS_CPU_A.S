@@ -148,3 +148,53 @@ OSTickISR3:
     POPREG # 现场恢复，来到这里的原因是因为没有更高优先级的任务
 
     mret # 中断返回
+
+.section .text
+.align 2
+.globl OSSignalRecevieSE
+
+OSSignalRecevieSE:
+    # addi sp,sp,16
+    # sw t0,0(sp)
+
+    bnez a0,OSSignalRecevieEnd
+OSSignalRecevieStart:
+    # addi sp,sp,-4
+    # sw t0,0(sp)  # 因为OSSignalRecevie要用到t0
+    la t0,OSTCBCur
+    lw t0,0(t0)
+    sw sp,0(t0)
+    j OSSignalRecevieSEE
+OSSignalRecevieEnd:
+    la t0,OSTCBCur
+    lw t0,0(t0)
+    lw sp,0(t0)
+    # lw t0,0(sp)
+    # addi sp,sp,4
+OSSignalRecevieSEE:
+    ret
+
+.section .text
+.align 2
+.globl OSSignalRecevie
+
+OSSignalRecevie:
+    # 不用现场恢复
+    la t0,OSTCBCur
+    lw t0,0(t0)
+    lw sp,0(t0)
+
+    addi sp,sp,-16 # 防止破坏原来的现场
+
+
+    addi sp,sp,-4
+    sw ra,0(sp)  # 保护返回地址
+
+    jalr a1  # a0 依然是 pdata 所以不用准备
+
+    lw ra,0(sp)
+    addi sp,sp,4
+
+    addi sp,sp,16 # 防止破坏原来的现场
+
+    ret # 返回原来的那个函数

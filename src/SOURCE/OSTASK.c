@@ -304,7 +304,10 @@ INT8U OSTaskCreateExt(void (*task)(void *pd),
         return (OS_PRIO_INVALID);
     }
 #endif
-    OS_ENTER_CRITICAL();
+    //OS_ENTER_CRITICAL();
+    CLOSEINT;
+    PUSHOSCRITICALSTACK();
+    OPENINT;
     if (OSTCBPrioTbl[prio] == (OS_TCB *)0)
     {                                     /* Make sure task doesn't already exist at this priority  */
         OSTCBPrioTbl[prio] = (OS_TCB *)1; /* Reserve the priority to prevent others from doing ...  */

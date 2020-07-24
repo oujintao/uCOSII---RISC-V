@@ -20,7 +20,7 @@ extern void SetRedLED();
 extern void SetGreenLED();
 extern void SetBlueLED();
 
-extern void InitHiFive();
+
 
 #include <stdio.h>
 #include <string.h>

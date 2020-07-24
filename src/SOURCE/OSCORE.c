@@ -2,10 +2,8 @@
 *********************************************************************************************************
 *                                                uC/OS-II
 *                                          The Real-Time Kernel
-*                                             CORE FUNCTIONS
+*                                             SIANGL MANAGER
 *
-*                          (c) Copyright 1992-2002, Jean J. Labrosse, Weston, FL
-*                                           All Rights Reserved
 *
 * File : OS_CORE.C
 * By   : Jean J. Labrosse
@@ -95,6 +93,7 @@ void OSInit(void)
 #endif
     //这是初始化，这个临界区的标志也是要初始化的
     OSIntLock = 0;
+    OSCRITICALSTACKTOP = 124;
 
     OS_InitMisc(); /* Initialize miscellaneous variables       */
 
@@ -912,9 +911,9 @@ void OS_Sched(void)
         { /* No Ctx Sw if current task is highest rdy     */
             OSTCBHighRdy = OSTCBPrioTbl[OSPrioHighRdy];
             OSCtxSwCtr++; /* Increment context switch counter             */
-            OS_EXIT_CRITICAL();
+            //OS_EXIT_CRITICAL();
             OS_TASK_SW(); /* Perform a context switch                     */
-            return;
+            //return;
         }
     }
     OS_EXIT_CRITICAL();

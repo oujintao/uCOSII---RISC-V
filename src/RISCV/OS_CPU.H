@@ -22,6 +22,10 @@
 *****************************************************************************************
 */
 
+extern void PUSHOSCRITICALSTACK();
+extern void POPOSCRITICALSTACK();
+extern void InitHiFive();
+
 #ifdef OS_CPU_GLOBALS
 #define OS_CPU_EXT
 #else
@@ -86,21 +90,58 @@ typedef unsigned short OS_CPU_SR; /* Define size of CPU status register (PSW = 1
 
 #if OS_CRITICAL_METHOD == 2
 
-#define CLOSEINT __asm__ __volatile__("li t0,2184\n\t" \
-                                      "csrrc zero,mie,t0\n\t");
-#define OPENINT __asm__ __volatile__("li t0,2184\n\t" \
-                                     "csrrs zero,mie,t0\n\t");
+#define CLOSEINT __asm__ __volatile__("li t0,8\n\t" \
+                                      "csrrc zero,mstatus,t0\n\t");
+#define OPENINT __asm__ __volatile__("li t0,8\n\t" \
+                                     "csrrs zero,mstatus,t0\n\t");
 
-/*关中断和开中断，就是为了OSIntLock的变化是一个原子操作*/
 #define OS_ENTER_CRITICAL() \
     CLOSEINT;               \
-    OSIntLock++;            \
+    PUSHOSCRITICALSTACK();  \
     OPENINT;
 #define OS_EXIT_CRITICAL() \
     CLOSEINT;              \
-    OSIntLock--;           \
+    POPOSCRITICALSTACK();  \
     OPENINT;
+
 #endif
+
+// #define CLOSEINT __asm__ __volatile__("li t0,8\n\t" \
+//                                       "csrrc zero,mstatus,t0\n\t");
+// #define OPENINT __asm__ __volatile__("li t0,8\n\t" \
+//                                      "csrrs zero,mstatus,t0\n\t");
+
+// /*关中断和开中断，就是为了OSIntLock的变化是一个原子操作*/
+// #define OS_ENTER_CRITICAL() \
+//     CLOSEINT;               \
+//     OSIntLock++;            \
+//     OPENINT;
+// #define OS_EXIT_CRITICAL() \
+//     CLOSEINT;              \
+//     OSIntLock--;           \
+//     OPENINT;
+// #endif
+
+/*关中断和开中断，就是为了OSIntLock的变化是一个原子操作*/
+// #define OS_ENTER_CRITICAL()                      \
+//     CLOSEINT;                                    \
+//     __asm__ __volatile__("addi sp,sp,-8\n\t"     \
+//                          "sw t0,0(sp)\n\t"       \
+//                          "csrrc t0,mie,zero\n\t" \
+//                          "sw t0,4(sp)\n\t"       \
+//                          "lw t0,0(sp)\n\t"       \
+//                          "addi sp,sp,4\n\t");    \
+//     OPENINT;
+// #define OS_EXIT_CRITICAL()                       \
+//     CLOSEINT;                                    \
+//     __asm__ __volatile__("addi sp,sp,-4\n\t"     \
+//                          "sw t0,0(sp)\n\t"       \
+//                          "lw t0,4(sp)\n\t"       \
+//                          "csrrs zero,mie,t0\n\t" \
+//                          "lw t0,0(sp)\n\t"       \
+//                          "addi sp,sp,8\n\t");    \
+//     OPENINT;
+// #endif
 
 #if OS_CRITICAL_METHOD == 3
 #define OS_ENTER_CRITICAL() (cpu_sr = OSCPUSaveSR()) /* Disable interrupts                        */
@@ -119,7 +160,14 @@ typedef unsigned short OS_CPU_SR; /* Define size of CPU status register (PSW = 1
 
 // #define OS_TASK_SW() asm INT uCOS
 //用ECALL来模拟软件中断
-#define OS_TASK_SW() __asm__ __volatile__("ECALL\n\t");
+
+#define OS_TASK_SW()                            \
+    CLOSEINT;                                   \
+    __asm__ __volatile__("li t0,0x02000000\n\t" \
+                         "li t1,1\n\t"          \
+                         "sw t1,0(t0)\n\t");    \
+    OPENINT;
+// #define OS_TASK_SW() __asm__ __volatile__("ECALL\n\t");
 
 /*
 *********************************************************************************************************

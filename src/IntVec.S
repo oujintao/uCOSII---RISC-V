@@ -34,8 +34,8 @@ IntVec:
     slli t0,t0,1 # 把31位的1移出去
     srli t0,t0,1 # 31位移进一个0 这样就达到了31位的1变成了0的效果
 
-    # li t1,3  # 3是软件中断
-    # beq t0,t1,MSoftInt  # 这里没有用到软件中断。调试不方便的问题。
+    li t1,3  # 3是软件中断
+    beq t0,t1,MSoftInt  # 这里没有用到软件中断。调试不方便的问题。
     li t1,7 # 7 是计数器中断
     beq t0,t1,MTimeInt
 
@@ -44,7 +44,9 @@ IntVec:
     mret
 
 MSoftInt:
-    # j MSoftISR
+    li t0,0x02000000
+    sw zero,0(t0)
+    j OSCtxSw
 MTimeInt:
     j OSTickISR  # 跳转到计数器中断的服务子程序
 
@@ -76,6 +78,9 @@ IntVecQuit:
     slli t0,t0,1 # 把31位的1移出去
     srli t0,t0,1 # 31位移进一个0 这样就达到了31位的1变成了0的效果
 
+    li t1,3
+    beq t0,t1,SoftIntQuit
+
     li t1,7 # 7 是计数器中断
     bne t0,t1,IntVecEnd # 不是计数器中断就直接中断退出
 
@@ -91,6 +96,12 @@ IntVecQuit:
     li t0,MTIMECOMPARE # MTIMECOMPARE的值更新 ,等MTIME>=MTIMECOMPARE就触发计数器中断
     sw t3,0(t0)
     sw t2,4(t0)
+
+    j IntVecEnd
+
+SoftIntQuit:
+    li t0,0x02000000
+    sw zero,0(t0)
 IntVecEnd:
     # 恢复现场就退出中断，保证没有影响原来任务的进程
     POPREG

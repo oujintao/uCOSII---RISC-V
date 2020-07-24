@@ -176,7 +176,7 @@ OS_STK *OSTaskStkInit(void (*task)(void *pd), void *pdata, OS_STK *ptos, unsigne
 
     opt = opt;                      /* 'opt' is not used, prevent warning                      */
     stk = (unsigned int *)ptos;           /* Load stack pointer                                      */
-    stk--;  //一个神奇的BUG，必须要这样规避。
+    //stk--;  //一个神奇的BUG，必须要这样规避。
 
     *stk-- = (unsigned int)(task);  //mepc
     *stk-- = 0x06874634; //x31

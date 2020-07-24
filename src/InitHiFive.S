@@ -35,7 +35,7 @@ InitHiFive:
     csrrw zero,mtvec,t0 # 写入中断入口地址
     li t0,8
     csrrs zero,mstatus,t0 # 8 = 1000b  mstatus的第三位是机器模式中断使能
-    li t0,128
+    li t0,136
     csrrs zero,mie,t0 # 136 = 10001000b = 128 + 8 mie的第7位和第3分别是计数器中断和软件中断 
 
     li t0,MTIME # t1,t2分别存着MTIME的64位数值

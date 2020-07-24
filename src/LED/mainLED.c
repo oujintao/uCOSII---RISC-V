@@ -24,7 +24,7 @@
 *********************************************************************************************************
 */
 //开发板空间不够大
-#define TASK_STK_SIZE 512 /* Size of each task's stacks (# of WORDs)            */
+#define TASK_STK_SIZE 128 /* Size of each task's stacks (# of WORDs)            */
 #define N_TASKS 3        /* Number of identical tasks                          */
 
 /*
@@ -35,6 +35,7 @@
 
 OS_STK TaskStk[N_TASKS][TASK_STK_SIZE]; /* Tasks stacks                                  */
 OS_STK TaskStartStk[TASK_STK_SIZE];
+int mode[3];
 
 //四个信号量，白色 蓝色 绿色 红色
 OS_EVENT *whiteSem;
@@ -46,7 +47,7 @@ OS_EVENT *blueSem;
 int delayCount;
 //这是一个参考值，100000时间很短，100的话用于调试，1000000用于慢慢看结果
 //（因为这是灯光闪烁来判断是够切换成功）
-int delay = 1;
+int delay = 1000000;
 void Delay()
 {
     for(int i=0;i<delay;i++)
@@ -67,6 +68,10 @@ void TaskR(void *data);
 void TaskG(void *data);
 void TaskB(void *data);
 
+void RSignal(void *pdata);
+void GSignal(void *pdata);
+void BSignal(void *pdata);
+
 /*$PAGE*/
 /*
 *********************************************************************************************************
@@ -74,7 +79,7 @@ void TaskB(void *data);
 *********************************************************************************************************
 */
 
-void main(void)
+int main(void)
 {
     OSInit(); /* Initialize uC/OS-II                      */
 
@@ -90,7 +95,12 @@ void main(void)
     OSTaskCreate(TaskR, (void *)0, &TaskStk[0][TASK_STK_SIZE - 1], 1);
     OSTaskCreate(TaskG, (void *)0, &TaskStk[1][TASK_STK_SIZE - 1], 2);
     OSTaskCreate(TaskB, (void *)0, &TaskStk[2][TASK_STK_SIZE - 1], 3);
-    OSStart(); /* Start multitasking                       */
+
+    OSSignalInit();
+
+    OSStart(); /* Start multitasking     */
+    
+    return 0;
 }
 
 /*
@@ -129,14 +139,15 @@ void TaskStart(void *pdata)
     然后延时一段时间来观察，
     最后释放一个信号量来决定下一个切换的灯光（也就是任务）
     */
-    unsigned char err;
-    while(1)
-    {
-        OSSemPend(whiteSem,0,&err);
-        SetWhiteLED();
-        Delay();
-        OSSemPost(blueSem);
-    }
+    // unsigned char err;
+
+    // while(1)
+    // {
+    //     OSSemPend(whiteSem,0,&err);
+    //     SetWhiteLED();
+    //     Delay();
+    //     OSSemPost(blueSem);
+    // }
 
     /*
     这是第二个测试程序
@@ -145,6 +156,23 @@ void TaskStart(void *pdata)
     // OSTimeDlyHMSM(0,0,8,0);
     // SetWhiteLED();
     // while(1){}
+
+    unsigned char err;
+    int mode;
+    OSSignalConnect(1, 1, RSignal);
+    OSSignalConnect(1, 2, GSignal);
+    OSSignalConnect(1, 3, BSignal);
+    mode = 0;
+    while(1)
+    {
+        OSSemPend(whiteSem, 0, &err);
+        OSSignalSend(1,&mode);
+        mode++;
+        mode %= 3;
+        SetWhiteLED();
+        Delay();
+        OSSemPost(blueSem);
+    }
 }
 
 void TaskR(void *pdata)
@@ -159,14 +187,14 @@ void TaskR(void *pdata)
     然后延时一段时间来观察，
     最后释放一个信号量来决定下一个切换的灯光（也就是任务）
     */
-    unsigned char err;
-    while (1)
-    {
-        OSSemPend(redSem, 0, &err);
-        SetRedLED();
-        Delay();
-        OSSemPost(whiteSem);
-    }
+    // unsigned char err;
+    // while (1)
+    // {
+    //     OSSemPend(redSem, 0, &err);
+    //     SetRedLED();
+    //     Delay();
+    //     OSSemPost(whiteSem);
+    // }
 
     /*
     延时4秒显示红色灯光
@@ -174,6 +202,25 @@ void TaskR(void *pdata)
     // OSTimeDlyHMSM(0, 0, 4, 0);
     // SetRedLED();
     // while(1){}
+    unsigned char err;
+    while (1)
+    {
+        OSSemPend(redSem, 0, &err);
+        if (mode[2] == 0)
+        {
+            SetRedLED();
+        }
+        else if (mode[2] == 1)
+        {
+            SetGreenLED();
+        }
+        else
+        {
+            SetBlueLED();
+        }
+        Delay();
+        OSSemPost(whiteSem);
+    }
 }
 
 void TaskG(void *pdata)
@@ -188,14 +235,14 @@ void TaskG(void *pdata)
     然后延时一段时间来观察，
     最后释放一个信号量来决定下一个切换的灯光（也就是任务）
     */
-    unsigned char err;
-    while (1)
-    {
-        OSSemPend(greenSem, 0, &err);
-        SetGreenLED();
-        Delay();
-        OSSemPost(redSem);
-    }
+    // unsigned char err;
+    // while (1)
+    // {
+    //     OSSemPend(greenSem, 0, &err);
+    //     SetGreenLED();
+    //     Delay();
+    //     OSSemPost(redSem);
+    // }
 
     /*
     延时2秒显示绿色灯光
@@ -203,6 +250,26 @@ void TaskG(void *pdata)
     // OSTimeDlyHMSM(0, 0, 2, 0);
     // SetGreenLED();
     // while(1){}
+
+    unsigned char err;
+    while (1)
+    {
+        OSSemPend(greenSem, 0, &err);
+        if (mode[2] == 0)
+        {
+            SetGreenLED();
+        }
+        else if (mode[2] == 1)
+        {
+            SetBlueLED();
+        }
+        else
+        {
+            SetRedLED();
+        }
+        Delay();
+        OSSemPost(redSem);
+    }
 }
 
 void TaskB(void *pdata)
@@ -217,18 +284,51 @@ void TaskB(void *pdata)
     然后延时一段时间来观察，
     最后释放一个信号量来决定下一个切换的灯光（也就是任务）
     */
-    unsigned char err;
-    while (1)
-    {
-        OSSemPend(blueSem, 0, &err);
-        SetBlueLED();
-        Delay();
-        OSSemPost(greenSem);
-    }
+    // unsigned char err;
+    // while (1)
+    // {
+    //     OSSemPend(blueSem, 0, &err);
+    //     SetBlueLED();
+    //     Delay();
+    //     OSSemPost(greenSem);
+    // }
 
     /*
     马上显示蓝色灯光，等待绿色的2秒结束就会切换
     */
     // SetBlueLED();
     // while (1){}
+
+    unsigned char err;
+    while (1)
+    {
+        OSSemPend(blueSem, 0, &err);
+        if (mode[2] == 0)
+        {
+            SetBlueLED();
+        }
+        else if (mode[2] == 1)
+        {
+            SetRedLED();
+        }
+        else
+        {
+            SetGreenLED();
+        }
+        Delay();
+        OSSemPost(greenSem);
+    }
+}
+
+void RSignal(void *pdata)
+{
+    mode[0] = *((int *)pdata);
+}
+void GSignal(void *pdata)
+{
+    mode[1] = *((int *)pdata);
+}
+void BSignal(void *pdata)
+{
+    mode[2] = *((int *)pdata);
 }
