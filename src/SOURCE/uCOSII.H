@@ -670,7 +670,7 @@ int OSSignalSend(int signalNum, void *pdata);
 void OSSignalDeleteResquestFromOrigin();
 void OSSignalDeleteResquestFromTarget();
 int OSSignalSetMaskFromOrigin(int signalNum, int prio, int mask);
-int OSSignalSetALLMaskFromTarget(int mask);
+void OSSignalSetALLMaskFromTarget(int mask);
 int OSSignalSetMaskFromTarget(int signalNum, int originPrio, int mask);
 
 /*$PAGE*/
