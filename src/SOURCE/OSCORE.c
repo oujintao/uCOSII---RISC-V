@@ -2,8 +2,10 @@
 *********************************************************************************************************
 *                                                uC/OS-II
 *                                          The Real-Time Kernel
-*                                             SIANGL MANAGER
+*                                             CORE FUNCTIONS
 *
+*                          (c) Copyright 1992-2002, Jean J. Labrosse, Weston, FL
+*                                           All Rights Reserved
 *
 * File : OS_CORE.C
 * By   : Jean J. Labrosse

@@ -33,6 +33,15 @@
 *********************************************************************************************************
 */
 
+extern unsigned int regFileTemp;
+#define WriteTest(regNum) __asm__ __volatile__(".weak regFileTemp\n\t"     \
+                                               "addi sp,sp,-4\n\t"         \
+                                               "sw t0,0(sp)\n\t"           \
+                                               "la t0,regFileTemp\n\t"     \
+                                               "lw x"#regNum",0(t0)\n\t" \
+                                               "lw t0,0(sp)\n\t"           \
+                                               "addi sp,sp,4\n\t");
+
 OS_STK TaskStk[N_TASKS][TASK_STK_SIZE]; /* Tasks stacks                                  */
 OS_STK TaskStartStk[TASK_STK_SIZE];
 int mode[3];
@@ -81,6 +90,7 @@ void BSignal(void *pdata);
 
 int main(void)
 {
+    WriteTest(5);
     OSInit(); /* Initialize uC/OS-II                      */
 
     //这是创建信号量，要白色先亮，也就是对应的信号量初始化1，其他是0
