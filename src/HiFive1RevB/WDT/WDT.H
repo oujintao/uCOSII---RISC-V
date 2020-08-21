@@ -6,6 +6,7 @@
 作用：声明了WDT.S的汇编函数，方便使用
 *****************************************************************************************
 */
+
 extern unsigned int WDTCheckIP();
 extern void WDTSetIPValue(unsigned int data1Bit);
 extern void WDTEnableCoreAwake();

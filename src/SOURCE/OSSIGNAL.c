@@ -471,7 +471,6 @@ int OSSignalDisConnect(int signalNum, int originPrio)
     int curPrio;
     int prio;
     OSSignalEvent *lowerNumTemp;
-    OSSignalEvent *frontTemp;
     OSSignalEvent *temp;
     OS_ENTER_CRITICAL(); //进入临界区
     curPrio = OSPrioCur; //获得当前任务的优先级
@@ -484,7 +483,6 @@ int OSSignalDisConnect(int signalNum, int originPrio)
     //temp是当前开头链表 lowerNumTemp就是temp之前的 也就是 3 3 4 5 5  temp是4的话 那么lowerNumTemp就是3
     temp = OSSignalFuncRegisterTabel[curPrio];
     lowerNumTemp = NULL;
-    frontTemp = NULL;
 
     //下面的代码是处理这个任务只有一个信号的
     if (temp->pNext == NULL && temp->pNextNum == NULL && temp->signalNum == signalNum)
@@ -639,7 +637,6 @@ int OSSignalSend(int signalNum, void *pdata)
         return OS_SIGNAL_IN_CRITICAL;
     }
     int curPrio;
-    unsigned int raTemp;
     OSSignalEvent *temp;
     OS_ENTER_CRITICAL();
     curPrio = OSPrioCur;                       //获得现在的优先级

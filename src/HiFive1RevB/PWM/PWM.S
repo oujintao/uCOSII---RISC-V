@@ -2287,7 +2287,7 @@ PWM0ReadPWMSValue:
     sw a0,PWMS(t0)
 
     li t0,255
-    andi a0,a0,t0
+    and a0,a0,t0
 
     lw t0,0(sp)
     addi sp,sp,4
@@ -2310,7 +2310,7 @@ PWM1ReadPWMSValue:
     li t0,255
     slli t0,t0,8
     ori t0,t0,255
-    andi a0,a0,t0
+    and a0,a0,t0
 
     lw t0,0(sp)
     addi sp,sp,4
@@ -2333,7 +2333,7 @@ PWM2ReadPWMSValue:
     li t0,255
     slli t0,t0,8
     ori t0,t0,255
-    andi a0,a0,t0
+    and a0,a0,t0
 
     lw t0,0(sp)
     addi sp,sp,4

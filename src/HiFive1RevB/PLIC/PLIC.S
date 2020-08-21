@@ -70,6 +70,30 @@
 # ############################################################################# #
 
 # ###################################################################### #
+# ReadSourceXPriorityValue############################################## #
+# ###################################################################### #
+.section .text
+.align 2
+.globl ReadSourceXPriorityValue
+
+ReadSourceXPriorityValue:
+    addi sp,sp,-8
+    sw t0,0(sp)
+    sw t1,0(sp)
+
+    add a0,a0,a0
+    add a0,a0,a0
+
+    li t0,SOURCE1_PRIORITY
+    add t0,t0,a0
+    lw a0,0(t0)
+    
+    lw t1,4(sp)
+    lw t0,0(sp)
+    addi sp,sp,8
+    ret
+
+# ###################################################################### #
 # SetSourceXPriority#################################################### #
 # ###################################################################### #
 .section .text
@@ -87,7 +111,7 @@ SetSource1Priority:
     addi sp,sp,4
     ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource2Priority
 
@@ -102,7 +126,7 @@ SetSource2Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource3Priority
 
@@ -117,7 +141,7 @@ SetSource3Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource4Priority
 
@@ -132,7 +156,7 @@ SetSource4Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource5Priority
 
@@ -147,7 +171,7 @@ SetSource5Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource6Priority
 
@@ -162,7 +186,7 @@ SetSource6Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource7Priority
 
@@ -177,7 +201,7 @@ SetSource7Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource8Priority
 
@@ -192,7 +216,7 @@ SetSource8Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource9Priority
 
@@ -207,7 +231,7 @@ SetSource9Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource10Priority
 
@@ -222,7 +246,7 @@ SetSource10Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource11Priority
 
@@ -237,7 +261,7 @@ SetSource11Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource12Priority
 
@@ -252,7 +276,7 @@ SetSource12Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource13Priority
 
@@ -267,7 +291,7 @@ SetSource13Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource14Priority
 
@@ -282,7 +306,7 @@ SetSource14Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource15Priority
 
@@ -297,7 +321,7 @@ SetSource15Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource16Priority
 
@@ -312,7 +336,7 @@ SetSource16Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource17Priority
 
@@ -327,7 +351,7 @@ SetSource17Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource18Priority
 
@@ -342,7 +366,7 @@ SetSource18Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource19Priority
 
@@ -357,7 +381,7 @@ SetSource19Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource20Priority
 
@@ -372,7 +396,7 @@ SetSource20Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource21Priority
 
@@ -387,7 +411,7 @@ SetSource21Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource22Priority
 
@@ -402,7 +426,7 @@ SetSource22Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource23Priority
 
@@ -417,7 +441,7 @@ SetSource23Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource24Priority
 
@@ -432,7 +456,7 @@ SetSource24Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource25Priority
 
@@ -447,7 +471,7 @@ SetSource25Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource26Priority
 
@@ -462,7 +486,7 @@ SetSource26Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource27Priority
 
@@ -477,7 +501,7 @@ SetSource27Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource28Priority
 
@@ -492,7 +516,7 @@ SetSource28Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource29Priority
 
@@ -507,7 +531,7 @@ SetSource29Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource30Priority
 
@@ -522,7 +546,7 @@ SetSource30Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource31Priority
 
@@ -537,7 +561,7 @@ SetSource31Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource32Priority
 
@@ -552,7 +576,7 @@ SetSource32Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource33Priority
 
@@ -567,7 +591,7 @@ SetSource33Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource34Priority
 
@@ -582,7 +606,7 @@ SetSource34Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource35Priority
 
@@ -597,7 +621,7 @@ SetSource35Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource36Priority
 
@@ -612,7 +636,7 @@ SetSource36Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource37Priority
 
@@ -627,7 +651,7 @@ SetSource37Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource38Priority
 
@@ -642,7 +666,7 @@ SetSource38Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource39Priority
 
@@ -657,7 +681,7 @@ SetSource39Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource40Priority
 
@@ -672,7 +696,7 @@ SetSource40Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource41Priority
 
@@ -687,7 +711,7 @@ SetSource41Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource42Priority
 
@@ -702,7 +726,7 @@ SetSource42Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource43Priority
 
@@ -717,7 +741,7 @@ SetSource43Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource44Priority
 
@@ -732,7 +756,7 @@ SetSource44Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource45Priority
 
@@ -747,7 +771,7 @@ SetSource45Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource46Priority
 
@@ -762,7 +786,7 @@ SetSource46Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource47Priority
 
@@ -777,7 +801,7 @@ SetSource47Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource48Priority
 
@@ -792,7 +816,7 @@ SetSource48Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource49Priority
 
@@ -807,7 +831,7 @@ SetSource49Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource50Priority
 
@@ -822,7 +846,7 @@ SetSource50Priority:
         addi sp,sp,4
         ret
 
-.section.text
+.section .text
 .align 2
 .globl SetSource51Priority
 

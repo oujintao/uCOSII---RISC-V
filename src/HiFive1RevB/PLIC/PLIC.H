@@ -59,6 +59,8 @@
 #define PWM2CMP2_Interrupt 50
 #define PWM2CMP3_Interrupt 51
 
+extern unsigned int ReadSourceXPriorityValue(unsigned int data1To51);
+
 extern void SetSource1Priority(unsigned int data3Bit);
 extern void SetSource2Priority(unsigned int data3Bit);
 extern void SetSource3Priority(unsigned int data3Bit);
@@ -173,3 +175,27 @@ extern void ClearTarget0Complete();
 #define PWM2CMP1Priority(data3Bit) SetSource49Priority(data3Bit)
 #define PWM2CMP2Priority(data3Bit) SetSource50Priority(data3Bit)
 #define PWM2CMP3Priority(data3Bit) SetSource51Priority(data3Bit)
+
+typedef void (*InterruptXISR)(void);
+
+extern InterruptXISR sourceXISRFuncSet[51];
+
+#define RegeditSourceXISRFunc_NOERR 0
+#define RegeditSourceXISRFunc_ErrorNum 1
+void ResetSourceXISRFuncSet()
+{
+    int i = 0;
+    for (i = 1; i < 52; i++)
+    {
+        sourceXISRFuncSet[i] = 0;
+    }
+}
+unsigned int RegeditSourceXISRFunc(unsigned int sourceNum, InterruptXISR funcName)
+{
+    if (sourceNum >= 1 || sourceNum <= 51)
+    {
+        sourceXISRFuncSet[sourceNum] = funcName;
+        return RegeditSourceXISRFunc_NOERR;
+    }
+    return RegeditSourceXISRFunc_ErrorNum;
+}

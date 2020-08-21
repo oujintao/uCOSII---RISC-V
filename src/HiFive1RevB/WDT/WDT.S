@@ -221,9 +221,9 @@ WDTEnableZeroCMP:
 # ###################################################################### #
 .section .text
 .align 2
-.globl WDTEnableZeroCMP
+.globl WDTDisableZeroCMP
 
-WDTEnableZeroCMP:
+WDTDisableZeroCMP:
     addi sp,sp,-8
     sw t0,0(sp)
     sw t1,4(sp)

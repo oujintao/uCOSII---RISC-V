@@ -106,43 +106,6 @@ typedef unsigned short OS_CPU_SR; /* Define size of CPU status register (PSW = 1
 
 #endif
 
-// #define CLOSEINT __asm__ __volatile__("li t0,8\n\t" \
-//                                       "csrrc zero,mstatus,t0\n\t");
-// #define OPENINT __asm__ __volatile__("li t0,8\n\t" \
-//                                      "csrrs zero,mstatus,t0\n\t");
-
-// /*关中断和开中断，就是为了OSIntLock的变化是一个原子操作*/
-// #define OS_ENTER_CRITICAL() \
-//     CLOSEINT;               \
-//     OSIntLock++;            \
-//     OPENINT;
-// #define OS_EXIT_CRITICAL() \
-//     CLOSEINT;              \
-//     OSIntLock--;           \
-//     OPENINT;
-// #endif
-
-/*关中断和开中断，就是为了OSIntLock的变化是一个原子操作*/
-// #define OS_ENTER_CRITICAL()                      \
-//     CLOSEINT;                                    \
-//     __asm__ __volatile__("addi sp,sp,-8\n\t"     \
-//                          "sw t0,0(sp)\n\t"       \
-//                          "csrrc t0,mie,zero\n\t" \
-//                          "sw t0,4(sp)\n\t"       \
-//                          "lw t0,0(sp)\n\t"       \
-//                          "addi sp,sp,4\n\t");    \
-//     OPENINT;
-// #define OS_EXIT_CRITICAL()                       \
-//     CLOSEINT;                                    \
-//     __asm__ __volatile__("addi sp,sp,-4\n\t"     \
-//                          "sw t0,0(sp)\n\t"       \
-//                          "lw t0,4(sp)\n\t"       \
-//                          "csrrs zero,mie,t0\n\t" \
-//                          "lw t0,0(sp)\n\t"       \
-//                          "addi sp,sp,8\n\t");    \
-//     OPENINT;
-// #endif
-
 #if OS_CRITICAL_METHOD == 3
 #define OS_ENTER_CRITICAL() (cpu_sr = OSCPUSaveSR()) /* Disable interrupts                        */
 #define OS_EXIT_CRITICAL() (OSCPURestoreSR(cpu_sr))  /* Enable  interrupts                        */

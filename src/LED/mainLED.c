@@ -18,6 +18,7 @@
 
 #include "includes.h"
 
+#include "..\RISCV_WriteReg\RISCV_WriteRegFile.H"
 /*
 *********************************************************************************************************
 *                                               CONSTANTS
@@ -32,15 +33,6 @@
 *                                               VARIABLES
 *********************************************************************************************************
 */
-
-extern unsigned int regFileTemp;
-#define WriteTest(regNum) __asm__ __volatile__(".weak regFileTemp\n\t"     \
-                                               "addi sp,sp,-4\n\t"         \
-                                               "sw t0,0(sp)\n\t"           \
-                                               "la t0,regFileTemp\n\t"     \
-                                               "lw x"#regNum",0(t0)\n\t" \
-                                               "lw t0,0(sp)\n\t"           \
-                                               "addi sp,sp,4\n\t");
 
 OS_STK TaskStk[N_TASKS][TASK_STK_SIZE]; /* Tasks stacks                                  */
 OS_STK TaskStartStk[TASK_STK_SIZE];
@@ -88,29 +80,36 @@ void BSignal(void *pdata);
 *********************************************************************************************************
 */
 
+
 int main(void)
 {
-    WriteTest(5);
-    OSInit(); /* Initialize uC/OS-II                      */
+    int u=0;
+    u++;
+    u++;
+    u++;
+    WriteReg(RISCV_REG_s2,u);
+    u++;
+    u++;
+    // OSInit(); /* Initialize uC/OS-II                      */
 
-    //这是创建信号量，要白色先亮，也就是对应的信号量初始化1，其他是0
-    whiteSem = OSSemCreate(1);
-    redSem = OSSemCreate(0);
-    greenSem = OSSemCreate(0);
-    blueSem = OSSemCreate(0);
+    // //这是创建信号量，要白色先亮，也就是对应的信号量初始化1，其他是0
+    // whiteSem = OSSemCreate(1);
+    // redSem = OSSemCreate(0);
+    // greenSem = OSSemCreate(0);
+    // blueSem = OSSemCreate(0);
 
-    //这是创建任务，最高优先级是显示白色的，然后其余三个很容易知道是什么灯光。
-    //最后的参数是优先级，数字越小，优先级越大。
-    OSTaskCreate(TaskStart, (void *)0, &TaskStartStk[TASK_STK_SIZE - 1], 0);
-    OSTaskCreate(TaskR, (void *)0, &TaskStk[0][TASK_STK_SIZE - 1], 1);
-    OSTaskCreate(TaskG, (void *)0, &TaskStk[1][TASK_STK_SIZE - 1], 2);
-    OSTaskCreate(TaskB, (void *)0, &TaskStk[2][TASK_STK_SIZE - 1], 3);
+    // //这是创建任务，最高优先级是显示白色的，然后其余三个很容易知道是什么灯光。
+    // //最后的参数是优先级，数字越小，优先级越大。
+    // OSTaskCreate(TaskStart, (void *)0, &TaskStartStk[TASK_STK_SIZE - 1], 0);
+    // OSTaskCreate(TaskR, (void *)0, &TaskStk[0][TASK_STK_SIZE - 1], 1);
+    // OSTaskCreate(TaskG, (void *)0, &TaskStk[1][TASK_STK_SIZE - 1], 2);
+    // OSTaskCreate(TaskB, (void *)0, &TaskStk[2][TASK_STK_SIZE - 1], 3);
 
-    OSSignalInit();
+    // OSSignalInit();
 
-    OSStart(); /* Start multitasking     */
+    // OSStart(); /* Start multitasking     */
     
-    return 0;
+    // return 0;
 }
 
 /*

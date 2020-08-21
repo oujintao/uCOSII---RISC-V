@@ -20,8 +20,6 @@ extern void SetRedLED();
 extern void SetGreenLED();
 extern void SetBlueLED();
 
-
-
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -31,3 +29,4 @@ extern void SetBlueLED();
 #include "..\RISCV\OS_CPU.H"
 #include "OS_CFG.H"
 #include "..\SOURCE\uCOSII.H"
+

@@ -13,6 +13,7 @@
 .weak OSIntLock  # 这是临界区进出标志 等于0就是不在临界区，进临界区一次就+1 出去就-1
 .weak OSCtxSw # 这是任务切换的调用代码段
 .weak OSTickISR # 这是计时器中断，时钟节拍的服务子程序的代码段
+.weak MExternIntISR
 
 .section .text
 .align 2
@@ -38,6 +39,8 @@ IntVec:
     beq t0,t1,MSoftInt  # 这里没有用到软件中断。调试不方便的问题。
     li t1,7 # 7 是计数器中断
     beq t0,t1,MTimeInt
+    li t1,11
+    beq t0,t1,MExternInt
 
     POPREG # 恢复现场，没有要对应的中断类型，直接跑了
 
@@ -49,7 +52,11 @@ MSoftInt:
     j OSCtxSw
 MTimeInt:
     j OSTickISR  # 跳转到计数器中断的服务子程序
+MExternInt:
+    jal MExternIntISR
+    POPREG # 恢复现场，没有要对应的中断类型，直接跑了
 
+    mret
 ErrorVec:
     li t1,11  # 11是ECALL
     beq t0,t1,ECALLERR
